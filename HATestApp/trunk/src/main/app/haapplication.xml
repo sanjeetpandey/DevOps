@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:jbossts="http://www.mulesoft.org/schema/mule/jbossts" xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:jms="http://www.mulesoft.org/schema/mule/jms" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" version="EE-3.5.1"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/jbossts http://www.mulesoft.org/schema/mule/jbossts/current/mule-jbossts.xsd">
+    <jms:activemq-connector name="Active_MQ" username="${activemq.username}" password="${activemq.password}" brokerURL="${activemq.brokerurl}" validateConnections="true"  doc:name="Active MQ" maxRedelivery="5">
+        <reconnect count="5"/>
+    </jms:activemq-connector>
+   
+    <flow name="ReliableAcquisitionFlow" doc:name="ReliableAcquisitionFlow" processingStrategy="synchronous">
+        <http:inbound-endpoint exchange-pattern="request-response" host="${http.hostname}" port="${http.port}" doc:name="HTTP" path="${http.path}"/>
+        <logger message="Received Request, request id: #[message.inboundProperties.requestId]" level="INFO" doc:name="Logger"/>
+        <expression-filter expression="#[payload != '/favicon.ico']" doc:name="Expression"/>
+        <set-property propertyName="requestId" value="#[message.inboundProperties.requestId + ':' + server.host]" doc:name="Property"/>
+        <jms:outbound-endpoint queue="${jms.request.queue}" doc:name="JMS" connector-ref="Active_MQ" />
+    </flow>
+    <flow name="ApplicationLogicFlow" doc:name="ApplicationLogicFlow">
+        <jms:inbound-endpoint queue="${jms.request.queue}" connector-ref="Active_MQ" doc:name="JMS">
+        	<jms:transaction action="ALWAYS_BEGIN"/>
+        </jms:inbound-endpoint>
+        <logger message="Read Request from JMS request queue, request Id: #[message.inboundProperties.requestId] Current Time: #[server.dateTime]" level="INFO" doc:name="Logger"/>
+        <db:insert config-ref="MySQL_Configuration" doc:name="Database" transactionalAction="NOT_SUPPORTED">
+            <db:parameterized-query><![CDATA[insert into LOG values( 'HA-TESTAPP',100,#[message.inboundProperties.requestId],'INFO','HA_TESTAPP_LOG',#[new Date()],#[server.host]);]]></db:parameterized-query>
+        </db:insert>
+        <catch-exception-strategy doc:name="Catch Exception Strategy">
+            <logger message="Caught Exception" level="INFO" doc:name="Logger"/>
+            <jms:outbound-endpoint queue="${jms.dlq}" connector-ref="Active_MQ" doc:name="JMS"/>
+        </catch-exception-strategy>
+    </flow>
+</mule>

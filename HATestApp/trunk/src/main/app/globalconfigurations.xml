@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" version="EE-3.5.1"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-current.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	<context:property-placeholder location="file:${MULE_HOME}/conf/esb-activemq.properties,file:${MULE_HOME}/conf/esb-hademoapplication.properties,file:${MULE_HOME}/conf/esb-muledb-mysql.properties" />
+	
+	<spring:beans>
+        <spring:bean id="MySQL_DataSource" name="MySQL_DataSource" class="org.enhydra.jdbc.standard.StandardXADataSource">
+            <spring:property name="driverName" value="${mysql.driverName}"/>
+            <spring:property name="url" value="${mysql.url}"/>
+            <spring:property name="user" value="${mysql.user}"/>
+            <spring:property name="password" value="${mysql.password}"/>
+        </spring:bean>
+    </spring:beans>
+     <db:mysql-config name="MySQL_Configuration"  doc:name="MySQL Configuration" dataSource-ref="MySQL_DataSource"/>
+</mule>
