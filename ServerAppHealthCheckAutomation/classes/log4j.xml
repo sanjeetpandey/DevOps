@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration debug="true" xmlns:log4j='http://jakarta.apache.org/log4j/'>
+
+	<appender name="mainAppender" class="org.apache.log4j.RollingFileAppender">
+		<param name="File" value="${mule.home}${file.separator}logs${file.separator}rentokilhealthcheckup.log" />
+		<param name="Append" value="true" />
+		<param name="MaxFileSize" value="10MB"/>
+		<param name="MaxBackupIndex" value="10"/>
+		<param name="BufferedIO" value="true" />
+		<param name="BufferSize" value="16" /> <!-- In KB, Default is 8KB -->
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d [%t] %-5p %c - %m%n" />
+		</layout>
+	</appender>
+	<appender name="asyncAppender" class="org.apache.log4j.AsyncAppender"> 
+		<param name="BufferSize" value="10000" />
+		<param name="Blocking" value="true" />
+		<appender-ref ref="mainAppender" /> 
+	</appender>
+	<appender name="console" class="org.apache.log4j.ConsoleAppender">
+	    <layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%-5p %d{yyyy-MM-dd HH:mm:ss} [%t] %c: %m%n" />
+	    </layout>
+	</appender>
+
+    <!-- CXF is used heavily by Mule for web services -->
+	<logger name="org.apache.cxf">
+		<level value="WARN"/> 
+	</logger>
+    <!-- Apache Commons tend to make a lot of noise which can clutter the log-->
+	<logger name="org.apache">
+		<level value="WARN"/> 
+	</logger>
+    <!-- Reduce startup noise -->
+	<logger name="org.springframework.beans.factory">
+		<level value="WARN"/> 
+	</logger>
+
+    <!-- Mule classes -->
+	<logger name="org.mule">
+		<level value="INFO"/> 
+	</logger>
+	<logger name="com.mulesoft">
+		<level value="INFO"/> 
+	</logger>
+
+
+	<logger name="org.jetel">
+		<level value="WARN"/> 
+	</logger>
+	<logger name="Tracking">
+		<level value="WARN"/>
+	</logger>
+
+	<!-- http wire information -->
+	<!--logger name="httpclient.wire">
+		<level value="ALL"/>
+	</logger-->
+
+	<root>
+		<level value="INFO" />
+		<!-- appender-ref ref="asyncAppender" / --> <!-- use this appender for deploying to standalone -->
+		<appender-ref ref="console" />
+	</root>
+
+</log4j:configuration>

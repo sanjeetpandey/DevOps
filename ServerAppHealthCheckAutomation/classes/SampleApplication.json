@@ -1,0 +1,124 @@
+{
+	"data": [{
+		"configResources": ["StoreBinaryFlow.xml", "RetrieveBinaryFlow.xml", "EncryptPasswordVMFlow.xml", "EncryptPasswordFlow.xml", "DeleteBinaryFlow.xml", "BinaryDataStoreServiceFlow.xml", "BdsGlobalConfigurations.xml", "AuthenticationFlow.xml"],
+		"appProperties": {
+			"app.home": "/data/mule/mule-enterprise/apps/BDS-P2-ESB-Application-TG-1.2-08JAN2016-vV1",
+			"app.name": "BDS-P2-ESB-Application-TG-1.2-08JAN2016-vV1"
+		},
+		"redeploymentEnabled": true,
+		"parentFirstClassLoader": false,
+		"domain": "default",
+		"status": "STARTED",
+		"name": "BDS-P2-ESB-Application-TG-1.2-08JAN2016-vV1",
+		"encoding": "UTF-8"
+	}, {
+		"configResources": ["ServiceTrakESB.xml", "GlobalConfigurations.xml"],
+		"appProperties": {
+			"app.home": "/data/mule/mule-enterprise/apps/servicetrakesb-api-services-TG-2.4-15JUN2016-vV1",
+			"app.name": "servicetrakesb-api-services-TG-2.4-15JUN2016-vV1"
+		},
+		"redeploymentEnabled": true,
+		"parentFirstClassLoader": false,
+		"domain": "default",
+		"status": "STARTED",
+		"name": "servicetrakesb-api-services-TG-2.4-15JUN2016-vV1",
+		"encoding": "UTF-8"
+	}, {
+		"configResources": ["navgci_mavn.xml"],
+		"appProperties": {
+			"app.home": "/data/mule/mule-enterprise/apps/GoogleNav-TG-1.0-16MAR2016-vV1",
+			"app.name": "GoogleNav-TG-1.0-16MAR2016-vV1"
+		},
+		"redeploymentEnabled": true,
+		"parentFirstClassLoader": false,
+		"domain": "default",
+		"status": "STARTED",
+		"name": "GoogleNav-TG-1.0-16MAR2016-vV1",
+		"encoding": "UTF-8"
+	}, {
+		"configResources": ["StoreImageFlow.xml", "RetrieveImageFlow.xml", "BinaryDataStoreServiceFlow.xml", "BdsGlobalConfigurations.xml"],
+		"appProperties": {
+			"app.home": "/data/mule/mule-enterprise/apps/BDS-ESB-Application-TG-1.0-30JUL2015-vV1",
+			"app.name": "BDS-ESB-Application-TG-1.0-30JUL2015-vV1"
+		},
+		"redeploymentEnabled": true,
+		"parentFirstClassLoader": false,
+		"domain": "default",
+		"status": "STARTED",
+		"name": "BDS-ESB-Application-TG-1.0-30JUL2015-vV1",
+		"encoding": "UTF-8"
+	}, {
+		"configResources": ["updatelinkedworkorderflow.xml", "VerisaeUpdateInvoiceWorkOrderBS.xml", "VerisaeTescoProcessMessageValuesTS.xml", "VerisaeOpenWorkOrderBS.xml", "VerisaeActionWorkOrderBS.xml", "ICABSGetUnProcessedMessagesBS.xml", "GetSendJobWorkOrder.xml", "CSIGlobalConfigurations.xml"],
+		"appProperties": {
+			"app.home": "/data/mule/mule-enterprise/apps/CSIESB-TESCO-TG-1.13-10AUG2016-vV1",
+			"app.name": "CSIESB-TESCO-TG-1.13-10AUG2016-vV1"
+		},
+		"redeploymentEnabled": true,
+		"parentFirstClassLoader": false,
+		"domain": "default",
+		"status": "STARTED",
+		"name": "CSIESB-TESCO-TG-1.13-10AUG2016-vV1",
+		"encoding": "UTF-8"
+	}, {
+		"configResources": ["logcleanup.xml"],
+		"appProperties": {
+			"app.home": "/data/mule/mule-enterprise/apps/LogCleanUp-Utility-28JULY-vV1",
+			"app.name": "LogCleanUp-Utility-28JULY-vV1"
+		},
+		"redeploymentEnabled": true,
+		"parentFirstClassLoader": false,
+		"domain": "default",
+		"status": "STARTED",
+		"name": "LogCleanUp-Utility-28JULY-vV1",
+		"encoding": "UTF-8"
+	}, {
+		"configResources": ["WriteMuleLogs.xml", "EpicorToESBSalesOrderFlow.xml", "EpicorToESBPurchaseOrderFlow.xml", "SourceToEpicorAck.xml", "SaveLogMessageToDb.xml", "PublishLogMessageToTopic.xml", "NdlToEpicorTransactionsConsumerFlow.xml", "NdlToEpicorAcknowledge.xml", "ImportStockSnapshotToErpFlow.xml", "MissingSequenceNumber.xml", "ImportTransactionToStagingDBFlow.xml", "GlobalConfigurations.xml", "EpicorToSourceAckFlow.xml", "EpicorToNDLSalesOrderFlow.xml", "EpicorToNDLPurchaseOrderFlow.xml", "CleanupOldLogsFromDb.xml", "CheckMissingAck.xml", "BackupSourceFile.xml"],
+		"appProperties": {
+			"app.home": "/data/mule/mule-enterprise/apps/EPICORESB-NLD-TG-1.0-14JUL2015-vV1",
+			"app.name": "EPICORESB-NLD-TG-1.0-14JUL2015-vV1"
+		},
+		"redeploymentEnabled": true,
+		"parentFirstClassLoader": false,
+		"domain": "default",
+		"status": "STARTED",
+		"name": "EPICORESB-NLD-TG-1.0-14JUL2015-vV1",
+		"encoding": "UTF-8"
+	}, {
+		"configResources": ["AdminPortalESBServices.xml", "customersupportfacilities.xml", "import-technician.xml", "manage-category-mappings.xml", "reviewmessages.xml", "technician-services.xml", "admin-sevices-common.xml", "servicecover-services.xml", "manage_workorder.xml", "messagebyworkorderno.xml", "resendmessageswithmsgid.xml", "premise-category-mapping.xml", "AuthorizationService.xml", "GlobalConfigurations.xml"],
+		"appProperties": {
+			"app.home": "/data/mule/mule-enterprise/apps/CSIESB-AdminPortal-TG-1.1-19JAN2016-vV1",
+			"app.name": "CSIESB-AdminPortal-TG-1.1-19JAN2016-vV1"
+		},
+		"redeploymentEnabled": true,
+		"parentFirstClassLoader": false,
+		"domain": "default",
+		"status": "STARTED",
+		"name": "CSIESB-AdminPortal-TG-1.1-19JAN2016-vV1",
+		"encoding": "UTF-8"
+	}, {
+		"configResources": ["work.xml", "work-history-detailed.xml", "tasks.xml", "sns.xml", "site_maintenances.xml", "service-receipt-template.xml", "service-image.xml", "send-service-report.xml", "recommendation.xml", "portfolio-details.xml", "icabs-router.xml", "global-configuration.xml", "ServiceTrakESB.xml"],
+		"appProperties": {
+			"app.home": "/data/mule/mule-enterprise/apps/stp-esb-api-services-1.0.0-SNAPSHOT-v201609201204",
+			"app.name": "stp-esb-api-services-1.0.0-SNAPSHOT-v201609201204"
+		},
+		"redeploymentEnabled": true,
+		"parentFirstClassLoader": false,
+		"domain": "default",
+		"status": "STARTED",
+		"name": "stp-esb-api-services-1.0.0-SNAPSHOT-v201609201204",
+		"encoding": "UTF-8"
+	}, {
+		"configResources": ["icabs-router.xml", "gds-resolver.xml"],
+		"appProperties": {
+			"app.home": "/data/mule/mule-enterprise/apps/gds-api-icabs-router-system-1.0-v201609221236",
+			"app.name": "gds-api-icabs-router-system-1.0-v201609221236"
+		},
+		"redeploymentEnabled": true,
+		"parentFirstClassLoader": false,
+		"domain": "default",
+		"status": "STARTED",
+		"name": "gds-api-icabs-router-system-1.0-v201609221236",
+		"encoding": "UTF-8"
+	}],
+	"total": 10
+}

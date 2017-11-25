@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?><Graph __version="3.5.0" author="akumar" created="Tue Oct 18 13:53:23 IST 2016" description="JSON To Map" guiVersion="3.4.4.P" id="1476877487540" licenseCode="Unlicensed" licenseType="Unknown" modified="Tue Oct 18 13:53:23 IST 2016" modifiedBy="akumar" name="JSON_To_Map_1JSON_To_Map_2JSON_To_Map_3JSON_To_Map_4JSON_To_Map_5JSON_To_Map_6" preview-file="${Project_Home}/src/main/resources/SampleApplication.json" revision="1.0" showComponentDetails="false">
+<Global>
+<Metadata __index="0" __referenceCounter="1" __sourcePath="{}/object/data" _dataStructure="SINGLE_DIMENSIONAL_COLLECTION" _id="__id" _metadataParentId="4ca93920-9d84-4870-89fe-bcddbc8cdfd8" _parent_id="__parent_id" _type="Input" id="8dc91214-29da-4bfe-86fe-3f933eadc0c8">
+<Record fieldDelimiter="," name="data" recordDelimiter="\n\\|\r\n\\|\r" type="delimited">
+<Field __artificialType="_parent_id" __systemManaged="true" name="__parent_id" type="string"/>
+<Field __artificialType="_id" __systemManaged="true" name="__id" type="string"/>
+<Field __index="0" __sourcePath="{}/object/data/configResources" containerType="list" label="configResources" name="configResources" type="string"/>
+<Field __index="1" __sourcePath="{}/object/data/appProperties/app.home" containerType="SINGLE" label="app.home" name="app_home" type="string"/>
+<Field __index="2" __sourcePath="{}/object/data/appProperties/app.name" containerType="SINGLE" label="app.name" name="app_name" type="string"/>
+<Field __index="3" __sourcePath="{}/object/data/redeploymentEnabled" containerType="SINGLE" label="redeploymentEnabled" name="redeploymentEnabled" type="boolean"/>
+<Field __index="4" __sourcePath="{}/object/data/parentFirstClassLoader" containerType="SINGLE" label="parentFirstClassLoader" name="parentFirstClassLoader" type="boolean"/>
+<Field __index="5" __sourcePath="{}/object/data/domain" containerType="SINGLE" label="domain" name="domain" type="string"/>
+<Field __index="6" __sourcePath="{}/object/data/status" containerType="SINGLE" label="status" name="status" type="string"/>
+<Field __index="7" __sourcePath="{}/object/data/name" containerType="SINGLE" label="name" name="name" type="string"/>
+<Field __index="8" __sourcePath="{}/object/data/encoding" containerType="SINGLE" label="encoding" name="encoding" type="string"/>
+</Record>
+</Metadata>
+<Metadata __index="0" __referenceCounter="1" __sourcePath="{}/object/data" _dataStructure="SINGLE_DIMENSIONAL_COLLECTION" _id="__id" _metadataParentId="dd1e5894-09c3-4bb4-9b85-7cc42cf4e788" _parent_id="__parent_id" _type="Output" id="2969575b-6a1c-4890-928e-425508fbba55">
+<Record fieldDelimiter="," name="data" recordDelimiter="\n\\|\r\n\\|\r" type="delimited">
+<Field __artificialType="_id" __systemManaged="true" name="__id" type="string"/>
+<Field __artificialType="_parent_id" __systemManaged="true" name="__parent_id" type="string"/>
+<Field __index="1" __sourcePath="{}/object/data/name" containerType="SINGLE" label="name" name="name" type="string"/>
+<Field __index="0" __sourcePath="{}/object/data/status" containerType="SINGLE" label="status" name="status" type="string"/>
+</Record>
+</Metadata>
+<Metadata __index="0" __referenceCounter="1" __sourcePath="{}/object" _dataStructure="OBJECT" _id="__id" _type="Input" id="4ca93920-9d84-4870-89fe-bcddbc8cdfd8">
+<Record fieldDelimiter="," name="object" recordDelimiter="\n\\|\r\n\\|\r" type="delimited">
+<Field __artificialType="_id" __systemManaged="true" name="__id" type="string"/>
+<Field __index="9" __sourcePath="{}/object/total" containerType="SINGLE" label="total" name="total" type="integer"/>
+</Record>
+</Metadata>
+<Metadata __index="0" __referenceCounter="1" __sourcePath="{}/object" _dataStructure="OBJECT" _id="__id" _type="Output" id="dd1e5894-09c3-4bb4-9b85-7cc42cf4e788">
+<Record fieldDelimiter="," name="object" recordDelimiter="\n\\|\r\n\\|\r" type="delimited">
+<Field __artificialType="_id" __systemManaged="true" name="__id" type="string"/>
+</Record>
+</Metadata>
+<Dictionary>
+<Entry id="DictionaryEntry0" input="true" name="inputPayload" output="false" type="object"/>
+<Entry id="DictionaryEntry1" input="false" name="outputPayload" output="true" type="object"/>
+</Dictionary>
+</Global>
+<Phase number="0">
+<Node enabled="enabled" guiName="Foreach 'data' -&gt; 'data'" guiX="460" guiY="120" id="FOREACH_DATA_DATA" transformClass="com.mulesoft.datamapper.transform.MelRecordTransform" type="REFORMAT">
+<attr name="melScript"><![CDATA[//MEL
+//START -> DO NOT REMOVE
+output.__id = input.__id;
+output.__parent_id = input.__parent_id;
+//END -> DO NOT REMOVE
+output.status = input.status;
+output.name = input.name;
+]]></attr>
+</Node>
+<Node enabled="enabled" guiName="Foreach 'object' -&gt; 'object'" guiX="460" guiY="20" id="FOREACH_OBJECT_OBJECT" transformClass="com.mulesoft.datamapper.transform.MelRecordTransform" type="REFORMAT">
+<attr name="melScript"><![CDATA[//MEL
+//START -> DO NOT REMOVE
+output.__id = input.__id;
+//END -> DO NOT REMOVE
+]]></attr>
+</Node>
+<Node charset="UTF-8" enabled="enabled" fileURL="dict:inputPayload" guiName="JSON READER" guiX="20" guiY="20" id="JSON_READER0" type="JSON_READER">
+<attr name="mapping"><![CDATA[<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Context xpath="/root">
+  <Context outPort="0" sequenceField="__id" xpath="object">
+    <Mapping cloverField="total" trim="true" xpath="total"/>
+    <Context generatedKey="__parent_id" outPort="1" parentKey="__id" sequenceField="__id" xpath="data">
+      <Mapping cloverField="configResources" trim="true" xpath="configResources"/>
+      <Mapping cloverField="app_home" trim="true" xpath="appProperties/app.home"/>
+      <Mapping cloverField="app_name" trim="true" xpath="appProperties/app.name"/>
+      <Mapping cloverField="redeploymentEnabled" trim="true" xpath="redeploymentEnabled"/>
+      <Mapping cloverField="parentFirstClassLoader" trim="true" xpath="parentFirstClassLoader"/>
+      <Mapping cloverField="domain" trim="true" xpath="domain"/>
+      <Mapping cloverField="status" trim="true" xpath="status"/>
+      <Mapping cloverField="name" trim="true" xpath="name"/>
+      <Mapping cloverField="encoding" trim="true" xpath="encoding"/>
+    </Context>
+  </Context>
+</Context>
+]]></attr>
+<attr name="__isJsonSchema"><![CDATA[false]]></attr>
+<attr name="_data_format"><![CDATA[JSON]]></attr>
+<attr name="jsonSchemaURL"><![CDATA[./src/main/resources/SampleApplication.json]]></attr>
+</Node>
+<Node cacheInMemory="true" enabled="enabled" fileURL="dict:outputPayload" guiName="Map&lt;k,v&gt; WRITER" guiX="900" guiY="20" id="MAP_WRITER0" type="MAP_WRITER">
+<attr name="mapping"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<object xmlns:clover="http://www.cloveretl.com/ns/xmlmapping" clover:inPort="0">
+  <clover:collection clover:name="data">
+    <item clover:inPort="1" clover:key="__parent_id" clover:parentKey="__id">
+      <status>$1.status</status>
+      <name>$1.name</name>
+    </item>
+  </clover:collection>
+</object>]]></attr>
+<attr name="_data_format"><![CDATA[MAP]]></attr>
+</Node>
+<Edge debugMode="true" fromNode="FOREACH_DATA_DATA:0" guiBendpoints="" id="Edge3" inPort="Port 1 (in)" metadata="2969575b-6a1c-4890-928e-425508fbba55" outPort="Port 0 (out)" toNode="MAP_WRITER0:1"/>
+<Edge debugMode="true" fromNode="FOREACH_OBJECT_OBJECT:0" guiBendpoints="" id="Edge1" inPort="Port 0 (in)" metadata="dd1e5894-09c3-4bb4-9b85-7cc42cf4e788" outPort="Port 0 (out)" toNode="MAP_WRITER0:0"/>
+<Edge debugMode="true" fromNode="JSON_READER0:0" guiBendpoints="" id="Edge0" inPort="Port 0 (in)" metadata="4ca93920-9d84-4870-89fe-bcddbc8cdfd8" outPort="Port 0 (out)" toNode="FOREACH_OBJECT_OBJECT:0"/>
+<Edge debugMode="true" fromNode="JSON_READER0:1" guiBendpoints="" id="Edge2" inPort="Port 0 (in)" metadata="8dc91214-29da-4bfe-86fe-3f933eadc0c8" outPort="Port 1 (out)" toNode="FOREACH_DATA_DATA:0"/>
+</Phase>
+</Graph>

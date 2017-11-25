@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:jms="http://www.mulesoft.org/schema/mule/jms" xmlns:ssh="http://www.mulesoft.org/schema/mule/ssh" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:metadata="http://www.mulesoft.org/schema/mule/metadata" xmlns:data-mapper="http://www.mulesoft.org/schema/mule/ee/data-mapper" xmlns:json="http://www.mulesoft.org/schema/mule/json" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-current.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
+http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd
+http://www.mulesoft.org/schema/mule/ee/data-mapper http://www.mulesoft.org/schema/mule/ee/data-mapper/current/mule-data-mapper.xsd
+http://www.mulesoft.org/schema/mule/ssh http://www.mulesoft.org/schema/mule/ssh/current/mule-ssh.xsd
+http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd">
+<!-- <context:property-placeholder location="file:${mule_home}/conf/esb-automatehealthcheckreport.properties" /> -->
+    <data-mapper:config name="JSON_To_Map" transformationGraphPath="json_to_map.grf" doc:name="JSON_To_Map"/>
+    <data-mapper:config name="JSON_To_Map_1" transformationGraphPath="json_to_map_1.grf" doc:name="JSON_To_Map_1"/>
+    <data-mapper:config name="JSON_To_Map_1JSON_To_Map_2" transformationGraphPath="json_to_map_2.grf" doc:name="JSON_To_Map_1JSON_To_Map_2"/>
+    <data-mapper:config name="JSON_To_Map_1JSON_To_Map_2JSON_To_Map_3" transformationGraphPath="json_to_map_3.grf" doc:name="JSON_To_Map_1JSON_To_Map_2JSON_To_Map_3"/>
+    <data-mapper:config name="JSON_To_Map_1JSON_To_Map_2JSON_To_Map_3JSON_To_Map_4" transformationGraphPath="json_to_map_4.grf" doc:name="JSON_To_Map_1JSON_To_Map_2JSON_To_Map_3JSON_To_Map_4"/>
+    <context:property-placeholder location="file:${mule_home}/conf/esb-automatehealthcheckreport.properties" />
+    <data-mapper:config name="JSON_To_Map_1JSON_To_Map_2JSON_To_Map_3JSON_To_Map_4JSON_To_Map_5" transformationGraphPath="json_to_map_5.grf" doc:name="JSON_To_Map_1JSON_To_Map_2JSON_To_Map_3JSON_To_Map_4JSON_To_Map_5"/>
+    <data-mapper:config name="JSON_To_Map_1JSON_To_Map_2JSON_To_Map_3JSON_To_Map_4JSON_To_Map_5JSON_To_Map_6" transformationGraphPath="json_to_map_6.grf" doc:name="JSON_To_Map_1JSON_To_Map_2JSON_To_Map_3JSON_To_Map_4JSON_To_Map_5JSON_To_Map_6"/>
+    <ssh:config name="SSH" username="username" password="******" timeout="100000" callbackFlowName="callbackflow" doc:name="SSH"/>
+    <data-mapper:config name="JSON_To_Map_1JSON_To_Map_2JSON_To_Map_3JSON_To_Map_4JSON_To_Map_5JSON_To_Map_6JSON_To_Map_7" transformationGraphPath="json_to_map_7.grf" doc:name="JSON_To_Map_1JSON_To_Map_2JSON_To_Map_3JSON_To_Map_4JSON_To_Map_5JSON_To_Map_6JSON_To_Map_7"/>
+    <data-mapper:config name="JSON_To_Map_1JSON_To_Map_2JSON_To_Map_3JSON_To_Map_4JSON_To_Map_5JSON_To_Map_6JSON_To_Map_7JSON_To_Map_8" transformationGraphPath="json_to_map_8.grf" doc:name="JSON_To_Map_1JSON_To_Map_2JSON_To_Map_3JSON_To_Map_4JSON_To_Map_5JSON_To_Map_6JSON_To_Map_7JSON_To_Map_8"/>
+    <flow name="ApplicationStatus">
+        <http:inbound-endpoint exchange-pattern="request-response" host="localhost" port="8081"  doc:name="HTTP" path="UK/Preprod"/>
+        
+        <http:outbound-endpoint exchange-pattern="request-response" host="${preprod.host}" port="${preprod.port}" method="GET" doc:name="Pre-Production-UK" path="${preprod.path}" password="*****" user="username"/>
+        <set-property propertyName="Access-Control-Allow-Origin" value="*" doc:name="Property"/>
+        <set-variable variableName="status" value="#[message.inboundProperties['http.status']]" doc:name="Copy the status code"/>
+        <choice doc:name="Choice">
+            <when expression="#[flowVars['Status']=='200']">
+                <logger message="hello" level="INFO" doc:name="Logger"/>
+               
+ <flow-ref name="healthcheckupFlow" doc:name="healthcheckupFlow"/>
+ 
+
+            </when>
+            <otherwise>
+                <logger message="Hii" level="INFO" doc:name="Logger"/>
+                <set-payload value="MMC is Down" doc:name="Set Payload"/>
+            </otherwise>
+        </choice>
+    </flow>
+   
+     <flow name="healthcheckupFlow">
+        <object-to-byte-array-transformer doc:name="Object to Byte Array"/>
+        <scatter-gather doc:name="Scatter-Gather">
+            <processor-chain>
+                <http:outbound-endpoint exchange-pattern="request-response" host="${preprod.host}" port="${preprod.port}" path="${preprod.node1.path}" method="GET" user="username" password="*****" doc:name="PreProd UK node 1 call"/>
+                <set-variable variableName="httpStatus" value="#[message.inboundProperties['http.status']]" doc:name="Copy the status code"/>
+                <choice doc:name="Choice">
+                    <when expression="#[flowVars['Status']=='200']">
+                        <byte-array-to-object-transformer doc:name="Byte Array to Object"/>
+                        <json:object-to-json-transformer doc:name="Object to JSON"/>
+                        <data-mapper:transform config-ref="JSON_To_Map_1JSON_To_Map_2JSON_To_Map_3" doc:name="JSON To Map"/>
+                        <logger level="INFO" doc:name="Logger"/>
+                        <foreach doc:name="For Each">
+                            <logger message="#[payload.data]" level="INFO" doc:name="Logger"/>
+                        </foreach>
+                    </when>
+                    <otherwise>
+                        <set-payload value="12345" doc:name="Set Payload"/>
+                        <logger level="INFO" doc:name="Logger"/>
+                    </otherwise>
+                </choice>
+            </processor-chain>
+            <processor-chain>
+                <http:outbound-endpoint exchange-pattern="request-response" host="${preprod.host}" port="${preprod.port}" path="${preprod.node2.path}" method="GET" doc:name="PreProd UK node 2 call" password="*****" user="username"/>
+                <set-variable variableName="status" value="#[message.inboundProperties['http.status']]" doc:name="Copy the status code"/>
+                <choice doc:name="Choice">
+                    <when expression="#[flowVars['Status']=='200']">
+                        <byte-array-to-object-transformer doc:name="Byte Array to Object"/>
+                        <json:object-to-json-transformer doc:name="Object to JSON"/>
+                        <data-mapper:transform config-ref="JSON_To_Map_1JSON_To_Map_2JSON_To_Map_3JSON_To_Map_4" doc:name="JSON To Map"/>
+                        <logger level="INFO" doc:name="Logger"/>
+                        <foreach doc:name="For Each">
+                            <logger message="#[payload.data]" level="INFO" doc:name="Logger"/>
+                        </foreach>
+                    </when>
+                    <otherwise>
+                        <set-payload value="12345" doc:name="Set Payload"/>
+                        <logger level="INFO" doc:name="Logger"/>
+                    </otherwise>
+                </choice>
+            </processor-chain>
+        </scatter-gather>
+        <combine-collections-transformer doc:name="Combine Collections"/>
+        <set-property propertyName="Access-Control-Allow-Origin" value="*" doc:name="Property"/>
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
+    </flow>
+    <flow name="serverMemorydetails">
+        <http:inbound-endpoint exchange-pattern="request-response" host="localhost" port="8081" path="memorydetails" doc:name="HTTP"/>
+        <logger message="Before memory check" level="INFO" doc:name="Logger"/>
+        
+        <component class="com.ri.memorytest.ServerMemoryDetails" doc:name="Java"/>
+        <logger message="after memory check #[payload]" level="INFO" doc:name="Logger"/>
+        <set-property propertyName="Access-Control-Allow-Origin" value="*" doc:name="Property"/>
+        <set-payload value=" #[payload]" doc:name="Set Payload"/>
+        <logger message="respopnse payload :#[payload]" level="INFO" doc:name="Logger"/>
+    </flow>
+    <flow name="alertCount">
+        <http:inbound-endpoint exchange-pattern="request-response" host="localhost" port="8081" path="alertCount" doc:name="HTTP"/>
+        <logger message="before calling " level="INFO" doc:name="Logger"/>
+        <component doc:name="Java" class="com.ri.alertcount.AlertsCount"/>
+        <logger message="Successssssss" level="INFO" doc:name="Logger"/>
+        <set-property propertyName="Access-Control-Allow-Origin" value="*" doc:name="Property"/>
+        <set-payload value=" #[payload]" doc:name="Set Payload"/>
+        <logger message="after call #[payload]" level="INFO" doc:name="Logger"/>
+    </flow>
+    <flow name="productioApplicationstatus">
+        <http:inbound-endpoint exchange-pattern="request-response" host="localhost" port="8081" path="asia/prod" doc:name="HTTP"/>
+        <http:outbound-endpoint exchange-pattern="request-response" host="${preprod.host}" port="${preprod.port}" path="${preprod.path}" method="GET" user="username" password="*****" doc:name="HTTP"/>
+        <set-variable variableName="status" value="#[message.inboundProperties['http.status']]" doc:name="Variable"/>
+        <choice doc:name="Choice">
+            <when expression="flowVars.status==200">
+                <logger level="INFO" doc:name="Logger"/>
+                <flow-ref name="healthcheckupukprod" doc:name="healthcheckupukprod"/>
+            </when>
+            <otherwise>
+                <logger level="INFO" doc:name="Logger"/>
+            </otherwise>
+        </choice>
+    </flow>
+    <flow name="healthcheckupukprod">
+        <object-to-byte-array-transformer doc:name="Object to Byte Array"/>
+        <scatter-gather doc:name="Scatter-Gather">
+            <processor-chain>
+                <http:outbound-endpoint exchange-pattern="request-response" host="${preprod.host}" port="${preprod.port}" path="${preprod.node1.path}" method="GET" user="username" password="******" doc:name="HTTP"/>
+                <set-variable variableName="statuses" value="#[message.inboundProperties['http.status']]" doc:name="Variable"/>
+                <choice doc:name="Choice">
+                    <when expression="#[flowVars['Status']=='200']">
+                        <byte-array-to-object-transformer doc:name="Byte Array to Object"/>
+                        <json:object-to-json-transformer doc:name="Object to JSON"/>
+                        <data-mapper:transform config-ref="JSON_To_Map_1JSON_To_Map_2JSON_To_Map_3JSON_To_Map_4JSON_To_Map_5" doc:name="JSON To Map"/>
+                        <logger level="INFO" doc:name="Logger"/>
+                        <foreach doc:name="For Each">
+                            <logger message="#[payload.data]" level="INFO" doc:name="Logger"/>
+                        </foreach>
+                    </when>
+                    <otherwise>
+                        <logger level="INFO" doc:name="Logger"/>
+                    </otherwise>
+                </choice>
+            </processor-chain>
+            <processor-chain>
+                <http:outbound-endpoint exchange-pattern="request-response" host="${preprod.host}" port="${preprod.port}" path="${preprod.node1.path}" method="GET" user="username" password="*****" doc:name="HTTP"/>
+                <set-variable variableName="status" value="#[message.inboundProperties['http.status']]" doc:name="Variable"/>
+                <choice doc:name="Choice">
+                    <when expression="#[flowVars['Status']=='200']">
+                        <byte-array-to-object-transformer doc:name="Byte Array to Object"/>
+                        <json:object-to-json-transformer doc:name="Object to JSON"/>
+                        <data-mapper:transform config-ref="JSON_To_Map_1JSON_To_Map_2JSON_To_Map_3JSON_To_Map_4JSON_To_Map_5JSON_To_Map_6" doc:name="JSON To Map"/>
+                        <logger level="INFO" doc:name="Logger"/>
+                        <foreach doc:name="For Each">
+                            <logger message="#[payload.data]" level="INFO" doc:name="Logger"/>
+                        </foreach>
+                    </when>
+                    <otherwise>
+                        <logger level="INFO" doc:name="Logger"/>
+                    </otherwise>
+                </choice>
+            </processor-chain>
+        </scatter-gather>
+        <combine-collections-transformer doc:name="Combine Collections"/>
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
+    </flow>
+    <flow name="GetAllResults">
+        <http:inbound-endpoint exchange-pattern="request-response" host="localhost" port="8081" path="getAllResults" doc:name="HTTP"/>
+        <logger level="INFO" doc:name="Logger"/>
+        <set-property propertyName="Access-Control-Allow-Origin" value="*" doc:name="Property"/>
+        <component class="com.ri.alertcount.AlertsCount" doc:name="Java"/>
+        <set-property propertyName="Access-Control-Allow-Origin" value="*" doc:name="Property"/>
+        <set-variable variableName="alertPayload" value="#[payload]" doc:name="Variable"/>
+        <flow-ref name="AlertFlow" doc:name="AlertFlow"/>
+        <logger message="payloaddd#[payload]" level="INFO" doc:name="Logger"/>
+        <flow-ref name="ServiceststusFlow" doc:name="ServiceststusFlow"/>
+        <expression-component doc:name="Expression"><![CDATA[import java.util.ArrayList;
+import org.codehaus.jettison.json.JSONObject;
+
+//JSONObject  payload=new JSONObject();
+//payload.put("servers",flowVars.Serverpayload);
+//payload.put("alert",flowVars.alertPayload);
+ArrayList payload=new ArrayList();
+payload.add(flowVars.alertPayload);
+payload.add(flowVars.Serverpayload);
+payload.add(flowVars.serverstatusPayload)
+
+
+return payload;
+]]></expression-component>
+
+        <set-payload value=" #[payload]" doc:name="Set Payload"/>
+        <logger message="Payload sum #[payload]" level="INFO" doc:name="Logger"/>
+    </flow>
+    <flow name="AlertFlow">
+        <logger level="INFO" doc:name="Logger"/>
+        <component class="com.ri.memorytest.ServerMemoryDetails" doc:name="Java"/>
+        <set-property propertyName="Access-Control-Allow-Origin" value="*" doc:name="Property"/>
+        <set-variable variableName="Serverpayload" value="#[payload]" doc:name="Variable"/>
+        <logger message="payloaddddddddd#[payload]" level="INFO" doc:name="Logger"/>
+    </flow>
+    <flow name="ServiceststusFlow">
+        <object-to-byte-array-transformer doc:name="Object to Byte Array"/>
+        <scatter-gather doc:name="Scatter-Gather">
+            <processor-chain>
+                <logger message="in Service statis node1 Logger" level="INFO" doc:name="Logger"/>
+                <http:outbound-endpoint exchange-pattern="request-response" host="${preprod.host}" port="${preprod.port}" path="${preprod.node1.path}" method="GET" doc:name="HTTP" password="*****" user="username"/>
+                <set-variable variableName="status1" value="#[message.inboundProperties['http.status']]" doc:name="Variable"/>
+                <choice doc:name="Choice">
+                    <when expression="#[flowVars['status1']=='200']">
+                        <byte-array-to-object-transformer doc:name="Byte Array to Object"/>
+                        <json:object-to-json-transformer doc:name="Object to JSON"/>
+                        <data-mapper:transform doc:name="JSON To Map" config-ref="JSON_To_Map_1JSON_To_Map_2JSON_To_Map_3JSON_To_Map_4JSON_To_Map_5JSON_To_Map_6JSON_To_Map_7"/>
+                        <logger level="INFO" doc:name="Logger" message="#[payload]"/>
+                        <foreach doc:name="For Each">
+                            <logger level="INFO" doc:name="Logger" message="#[payload]"/>
+                        </foreach>
+                        <logger message="after foreach loop #[payload]" level="INFO" doc:name="Logger"/>
+                    </when>
+                    <otherwise>
+                        <logger level="INFO" doc:name="Logger"/>
+                    </otherwise>
+                </choice>
+            </processor-chain>
+            <processor-chain>
+                <logger message="in Service statis node 2 Logger" level="INFO" doc:name="Logger"/>
+                <http:outbound-endpoint exchange-pattern="request-response" host="${preprod.host}" port="${preprod.port}" path="${preprod.node2.path}" method="GET" doc:name="HTTP" password="*****" user="username"/>
+                <set-variable variableName="status2" value="#[message.inboundProperties['http.status']]" doc:name="Variable"/>
+                <choice doc:name="Choice">
+                    <when expression="#[flowVars['status2']=='200']">
+                        <byte-array-to-object-transformer doc:name="Byte Array to Object"/>
+                        <json:object-to-json-transformer doc:name="Object to JSON"/>
+                        <data-mapper:transform doc:name="JSON To Map" config-ref="JSON_To_Map_1JSON_To_Map_2JSON_To_Map_3JSON_To_Map_4JSON_To_Map_5JSON_To_Map_6JSON_To_Map_7JSON_To_Map_8"/>
+                        <logger level="INFO" doc:name="Logger" message="#[payload]"/>
+                        <foreach doc:name="For Each">
+                            <logger level="INFO" doc:name="Logger" message="#[payload]"/>
+                        </foreach>
+                        <logger message="after foreach 2  #[payload]" level="INFO" doc:name="Logger"/>
+                    </when>
+                    <otherwise>
+                        <logger level="INFO" doc:name="Logger"/>
+                    </otherwise>
+                </choice>
+            </processor-chain>
+        </scatter-gather>
+        <combine-collections-transformer doc:name="Combine Collections"/>
+        <set-property propertyName="Access-Control-Allow-Origin" value="*" doc:name="Property"/>
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
+        <set-variable variableName="serverstatusPayload" value="#[payload]" doc:name="Variable"/>
+    </flow>
+    
+ 
+
+</mule>
